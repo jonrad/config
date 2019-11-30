@@ -79,11 +79,13 @@ function s() {
   shift
   ARGS=$@
 
-  scp -r ~/.jonradchenko_config $HOST:/tmp/ $ARGS && ssh -t $HOST PREPROMPT="local\\ \\>\\ " /bin/bash --init-file /tmp/.jonradchenko_config/.bash_profile
+  # TODO: Use rsync
+  scp -r ~/.jonradchenko_config $HOST:/tmp/ $ARGS && \
+  ssh -t $HOST PREPROMPT="local\\ \\>\\ " /bin/bash --init-file /tmp/.jonradchenko_config/.bash_profile
 }
 
 ### VIM
-# export VIMINIT="source $CONFIG_DIR/.vimrc"
+export VIMINIT="source $CONFIG_DIR/.vimrc"
 
 ### TERM
 export PS1="\[\e[35m\]$PREPROMPT\[\e[m\]\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]:\[\e[32m\]\W\[\e[m\] \\$ "
