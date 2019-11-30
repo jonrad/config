@@ -1,20 +1,30 @@
+# IS_ZSH = 1 when we're in a zsh prompt
 IS_ZSH=
 if [ -z "$ZSH" ]; then
   IS_ZSH=1
 fi
 
+# CONFIG_DIR is where the config files are located in this install
+# Defaults to ~/.jonradchenko_config for local installs and /tmp/.jonradchenko_config for replicated
 export CONFIG_DIR="/tmp/.jonradchenko_config"
 if [ -d "$HOME/.jonradchenko_config" ]; then
   export CONFIG_DIR="$HOME/.jonradchenko_config"
 fi
 
 ### General
-alias ls="ls -last --color=auto"
+# make ls not suck
+if [ $IS_ZSH ]; then
+  alias ls="ls -lastG"
+else
+  alias ls="ls -last --color=auto"
+fi
 
 ### Kubernetes
 if [ -x "$(command -v kubectl)" ]; then
+  #k alias is <3
   alias k="kubectl"
 
+  # kb replicates our configuration to a remote env before running an interactive bash
   kb () {
     POD=$1
     shift
@@ -33,6 +43,7 @@ if [ -x "$(command -v kubectl)" ]; then
     PREPROMPT="$PREVIOUSPREPROMPT"
   }
 
+  # helper function to build our k command to use namespace and context
   function buildk {
     k="kubectl"
     kprompt=""
@@ -50,17 +61,20 @@ if [ -x "$(command -v kubectl)" ]; then
     alias k="$k"
   }
 
+  # set kubectl context for the environment
   function kctx {
     export kcontext=$1
     buildk
   }
 
+  # set kubectl namespace for the environment
   function kns {
     export knamespace=$1
     buildk
   }
 
-  if [ $ZSH ]; then
+  # attempt to get completions to work
+  if [ $IS_ZSH ]; then
     source <(kubectl completion zsh)
   
     complete -F __kubectl_get_resource_namespace kns
@@ -72,8 +86,10 @@ if [ -x "$(command -v kubectl)" ]; then
 fi
 
 ### SSH
+# Use su to switch to root and use our configuration. Stop using sudo su!
 alias su="sudo PREPROMPT=\"$PREPROMPT\" -s bash --init-file $CONFIG_DIR/.bash_profile"
 
+# s HOST [args] to ssh to host and replicate our environment
 function s() {
   HOST=$1
   shift

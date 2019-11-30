@@ -11,9 +11,21 @@ set incsearch
 set hlsearch
 set ignorecase
 set smartcase
+
+" Space to select current word under cursor
 noremap <space> viw
+
+" semicolon as colon
 noremap ; :
+
+" jj as escape
 inoremap jj <esc>
+
+" J and K to move up and down a page
+nnoremap J <C-f>
+nnoremap K <C-b>
+
+" what are these?
 nnoremap ,= gg=G
 nnoremap >b mzvi}>'z
 nnoremap <b mzvi}<'z
@@ -22,21 +34,4 @@ nnoremap gj gT
 nnoremap gk gt
 nnoremap ,f :2,$s/pick/f<cr>
 nnoremap ,<return> f,a<return><esc>
-nnoremap <C-j> <C-f>
-nnoremap <C-k> <C-b>
 
-" Private Setter
-nnoremap ,ps /set;<cr>iprivate <esc>:noh<return>
-
-vnoremap ,a xinew[] {  }<esc>hhp
-vnoremap ,e xiIEnumerable<<esc>pa><esc>
-syntax on
-
-"nnoremap <esc> <esc>:noh<cr>
-"
-"
-"NVIM
-"set mouse=a
-"tnoremap <C-\> <C-\><C-n>
-"set laststatus=0 ruler
-"autocmd BufEnter term://* startinsert
