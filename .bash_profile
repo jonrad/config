@@ -1,6 +1,6 @@
 # IS_ZSH = 1 when we're in a zsh prompt
 IS_ZSH=
-if [ -z "$ZSH" ]; then
+if ! [ -z "$ZSH" ]; then
   IS_ZSH=1
 fi
 
